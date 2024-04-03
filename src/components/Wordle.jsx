@@ -15,9 +15,13 @@ function Wordle() {
 
   const renderGameStatus = () => {
     if (gameState === GAME_STATE.WON) {
-      return (
-        <p>{`Congratulations! You've won the game on turn: ${attempt}`}</p>
-      );
+      const message =
+        attempt === 1
+          ? "Congratulations! You won on the first try!!!"
+          : attempt === 6
+          ? "Congratulations! That was a close clutch!"
+          : `You've won the game on turn: ${attempt}`;
+      return <p>{message}</p>;
     } else if (gameState === GAME_STATE.LOST) {
       return <p>Game Over. Better luck next time!</p>;
     }
@@ -36,7 +40,7 @@ function Wordle() {
         </li>
       </ul>
 
-    {currentGuess && <p>{"Your current guess is " + currentGuess + " "}</p>}
+      {currentGuess && <p>{"Your current guess is " + currentGuess + " "}</p>}
 
       {renderGameStatus()}
 
