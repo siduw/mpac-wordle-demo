@@ -34,11 +34,11 @@ function Wordle() {
             {"2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)"}
           </li>
         </ul>
-        <p>{"Current Guess: " + currentGuess}</p>
+        {!isFinished && <p>{"Current Guess: " + currentGuess + " Current Turn: " + (attempt + 1)}</p>}
         {isFinished && (
           <div>
             <p>This game is over</p>
-            <p>{attempt < 5 ? "You Won" : "You Lost"}</p>
+            <p>{attempt <= 6 ? "You Won" : "You Lost"}</p>
           </div>
         )}
         {isLoading && <div>Loading...</div>}
