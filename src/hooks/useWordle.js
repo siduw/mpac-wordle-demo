@@ -43,11 +43,13 @@ function wordleReducer(state, action) {
           attempt: nextAttempt,
           error: null,
           isLoading: false,
-          isFinished: nextAttempt >= MAX_ATTEMPTS || (score.every(ele => ele === 2)),
+          isFinished:
+            nextAttempt >= MAX_ATTEMPTS || score.every((ele) => ele === 2),
         };
       } else {
         return {
           ...state,
+          isLoading: false,
           error: { message: "This is not a valid word." },
         };
       }
@@ -71,7 +73,7 @@ function useWordle() {
   const initialState = {
     currentGuess: "",
     previousGuesses: Array(MAX_ATTEMPTS).fill(null), // [{word: "", score: [0-2, 0-2, 0-2, 0-2, 0-2]}, ...]
-    attempt: 0,
+    attempt: 0, // 0 - 5
     isFinished: false,
     isLoading: false,
     error: null,
@@ -108,6 +110,7 @@ function useWordle() {
   };
 
   const handleKeyDown = ({ key }) => {
+    if (wordleState.isLoading) return;
     if (wordleState.isFinished) {
       handleError("The Game is Already Over");
     } else if (/^[a-zA-Z]$/.test(key)) {
@@ -135,6 +138,12 @@ function useWordle() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown, wordleState.isFinished]);
+
+  useEffect(() => {
+    if (wordleState.error && wordleState.error.message) {
+      alert(wordleState.error.message);
+    }
+  }, [wordleState.error]);
 
   return { ...wordleState };
 }

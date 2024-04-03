@@ -4,7 +4,10 @@ function LetterBox({ letter, score }) {
     color = "bg-yellow-400 ";
   } else if (score === 2) {
     color = "bg-green-400";
-  } else {
+  } else if (score == 0) {
+    color = "bg-slate-400 ";
+  } else 
+  {
     color = "bg-slate-100 ";
   }
   return (
