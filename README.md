@@ -41,3 +41,9 @@ Add More Features: (After Exams)
   - Scalability and Maintainability:
 
     - As new features (e.g., Hard Mode, on-screen keyboard) are added, the complexity of state management is expected to increase. useReducer() offers a scalable solution that can accommodate this complexity more gracefully than multiple useState() hooks
+
+## why useMemo() and useCallback() are not that helpful for a project of this scope and nature
+
+- Simple Computed Values
+- Shallow Component Tree
+- Premature Optimization
