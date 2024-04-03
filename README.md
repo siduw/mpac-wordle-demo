@@ -8,6 +8,11 @@
 
   - TailwindCSS is used for styling (utility-first CSS framework for rapid UI development)
 
+## To Run Locally
+While in the project root folder:
+- npm install
+- npm run dev
+
 # Deployed on Vercel
 
 - https://mpac-wordle-demo.vercel.app/
