@@ -39,20 +39,19 @@ function Wordle() {
           <p>2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)</p>
         </li>
       </ul>
+      <p>{'Your current guess is: "' + currentGuess + '"'}</p>
+      <div className="min-h-20">
+        {isLoading && <div>Loading...</div>}
 
-      {currentGuess && <p>{"Your current guess is " + currentGuess + " "}</p>}
-
-      {renderGameStatus()}
-
-      {isLoading && <div>Loading...</div>}
-
-      {error && <Error errorVal={error.message}></Error>}
+        {error && <Error errorVal={error.message}></Error>}
+      </div>
 
       <Board
         attempt={attempt}
         currentGuess={currentGuess}
         previousGuesses={previousGuesses}
       />
+      {renderGameStatus()}
     </div>
   );
 }
