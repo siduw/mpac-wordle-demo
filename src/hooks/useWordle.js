@@ -16,6 +16,8 @@ function wordleReducer(state, action) {
           error: null,
         };
       }
+
+      // DO NOTHING IS NOT VALID
       return { ...state };
     case "DEL_CHARACTER_FROM_CURRENT_GUESS":
       let new_current = state.currentGuess.slice(0, -1);
@@ -29,24 +31,52 @@ function wordleReducer(state, action) {
       return { ...state, error: null, isLoading: true };
     case "SUBMIT_GUESS_SUCCESS":
       const { is_valid_word, score } = action.payload;
+      let nextAttempt = state.attempt + 1;
+      let solutionArray = [...state.previousGuesses];
+
       if (is_valid_word) {
-        let nextAttempt = state.attempt + 1;
-        let solutionArray = [...state.previousGuesses];
         solutionArray[state.attempt] = {
           word: state.currentGuess,
           score: action.payload.score,
         };
+
+        // CHECK IF THE GAME IS WON
+        if (score.every((ele) => ele === 2)) {
+          return {
+            ...state,
+            previousGuesses: solutionArray,
+            currentGuess: "",
+            attempt: nextAttempt,
+            gameState: "won",
+            isLoading: false,
+            error: null,
+          };
+        }
+
+        // CHECK IF THE GAME IS LOST BY EXHAUSTING MAX ATTEMPTS
+        if (nextAttempt >= MAX_ATTEMPTS) {
+          return {
+            ...state,
+            previousGuesses: solutionArray,
+            currentGuess: "",
+            attempt: nextAttempt,
+            gameState: "lost",
+            isLoading: false,
+            error: null,
+          };
+        }
+
+        // Game is still ongoing
         return {
           ...state,
           previousGuesses: solutionArray,
           currentGuess: "",
           attempt: nextAttempt,
-          error: null,
           isLoading: false,
-          isFinished:
-            nextAttempt >= MAX_ATTEMPTS || score.every((ele) => ele === 2),
+          error: null,
         };
       } else {
+        // HANDLE INVALID WORD WITHOUT CHANING attempt OR gamesState
         return {
           ...state,
           isLoading: false,
@@ -63,6 +93,7 @@ function wordleReducer(state, action) {
       return {
         ...state,
         error: null,
+        isLoading: false,
       };
     default:
       return state;
@@ -70,11 +101,12 @@ function wordleReducer(state, action) {
 }
 
 function useWordle() {
+  // SETTING INITIAL STATE
   const initialState = {
     currentGuess: "",
     previousGuesses: Array(MAX_ATTEMPTS).fill(null), // [{word: "", score: [0-2, 0-2, 0-2, 0-2, 0-2]}, ...]
-    attempt: 0, // 0 - 5
-    isFinished: false,
+    attempt: 0, // 0-5
+    gameState: "on-going", // "won"/"lost"/"on-going"
     isLoading: false,
     error: null,
   };
@@ -110,11 +142,13 @@ function useWordle() {
   };
 
   const handleKeyDown = ({ key }) => {
-    if (wordleState.isLoading) return;
-    if (wordleState.isFinished) {
-      handleError("The Game is Already Over");
-    } else if (/^[a-zA-Z]$/.test(key)) {
-      wordleDispatch({ type: "ADD_CHARACTER_TO_CURRENT_GUESS", payload: key });
+    // NO CHANGED REGISTERED WHEN LOADING OR WHEN THE GAME IS OVER
+    if (wordleState.isLoading || wordleState.gameState !== 'on-going') return;
+    if (/^[a-zA-Z]$/.test(key)) {
+      wordleDispatch({
+        type: "ADD_CHARACTER_TO_CURRENT_GUESS",
+        payload: key,
+      });
     } else if (key === "Backspace") {
       wordleDispatch({ type: "DEL_CHARACTER_FROM_CURRENT_GUESS" });
     } else if (key === "Enter") {
@@ -131,13 +165,10 @@ function useWordle() {
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
 
-    if (wordleState.isFinished === true) {
-      window.removeEventListener("keydown", handleKeyDown);
-    }
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleKeyDown, wordleState.isFinished]);
+  }, [handleKeyDown, wordleState.gameState]);
 
   useEffect(() => {
     if (wordleState.error && wordleState.error.message) {

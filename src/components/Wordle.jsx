@@ -12,7 +12,7 @@ function Wordle() {
     previousGuesses,
     isLoading,
     error,
-    isFinished,
+    gameState,
   } = useWordle();
 
   return (
@@ -21,7 +21,7 @@ function Wordle() {
         attempt,
         currentGuess,
         previousGuesses,
-        isFinished,
+        gameState,
         error,
         isLoading,
       }}
@@ -34,13 +34,8 @@ function Wordle() {
             {"2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)"}
           </li>
         </ul>
-        {!isFinished && <p>{"Current Guess: " + currentGuess + " Current Turn: " + (attempt + 1)}</p>}
-        {isFinished && (
-          <div>
-            <p>This game is over</p>
-            <p>{attempt <= 6 ? "You Won" : "You Lost"}</p>
-          </div>
-        )}
+        {gameState === "won" && <p>Congratulations! You've won the game!</p>}
+        {gameState === "lost" && <p>Game Over. Try again!</p>}
         {isLoading && <div>Loading...</div>}
         <Board />
       </div>
