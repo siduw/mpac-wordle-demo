@@ -1,11 +1,6 @@
-import { useContext } from "react";
-
 import Row from "./Row";
 
-import { WordleContext } from "./Wordle";
-
-function Board() {
-  const { attempt, currentGuess, previousGuesses } = useContext(WordleContext);
+function Board({ attempt, currentGuess, previousGuesses }) {
   return (
     <div className="flex flex-col">
       {previousGuesses.map((guess, index) => {

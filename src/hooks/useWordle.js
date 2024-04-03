@@ -1,6 +1,11 @@
 import { useReducer, useEffect } from "react";
-import { MAX_ATTEMPTS, WORD_LENGTH } from "../utilities/constants";
-import { API_ROUTE } from "../utilities/constants";
+
+import {
+  GAME_STATE,
+  MAX_ATTEMPTS,
+  WORD_LENGTH,
+  API_ROUTE,
+} from "../utilities/constants";
 
 function wordleReducer(state, action) {
   switch (action.type) {
@@ -47,11 +52,11 @@ function wordleReducer(state, action) {
         score: action.payload.score,
       };
 
-      let gameState = "on-going"; // Default state
+      let gameState = GAME_STATE.ONGOING; // Default state
       if (score.every((ele) => ele === 2)) {
-        gameState = "won"; // Win condition met
+        gameState = GAME_STATE.WON; // Win condition met
       } else if (nextAttempt >= MAX_ATTEMPTS) {
-        gameState = "lost"; // Lose condition met by exhausting attempts
+        gameState = GAME_STATE.LOST; // Lose condition met by exhausting attempts
       }
 
       return {
@@ -86,7 +91,7 @@ function useWordle() {
     currentGuess: "",
     previousGuesses: Array(MAX_ATTEMPTS).fill(null), // [{word: "", score: [0-2, 0-2, 0-2, 0-2, 0-2]}, ...]
     attempt: 0, // 0-5
-    gameState: "on-going", // "won"/"lost"/"on-going"
+    gameState: GAME_STATE.ONGOING,
     isLoading: false,
     error: null,
   };
@@ -122,7 +127,8 @@ function useWordle() {
   };
 
   const handleKeyDown = ({ key }) => {
-    if (wordleState.isLoading || wordleState.gameState !== "on-going") return;
+    if (wordleState.isLoading || wordleState.gameState !== GAME_STATE.ONGOING)
+      return;
 
     const isLetter = /^[a-zA-Z]$/.test(key);
 
@@ -152,14 +158,7 @@ function useWordle() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
-
-  // FOR MONITORING ERRORS
-  useEffect(() => {
-    if (wordleState.error && wordleState.error.message) {
-      alert(wordleState.error.message);
-    }
-  }, [wordleState.error]);
-
+  
   return { ...wordleState };
 }
 

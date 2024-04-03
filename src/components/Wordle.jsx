@@ -1,9 +1,9 @@
-import { createContext, useEffect } from "react";
 import useWordle from "../hooks/useWordle";
 
 import Board from "./Board";
+import { GAME_STATE } from "../utilities/constants";
 
-export const WordleContext = createContext();
+import Error from "./Error";
 
 function Wordle() {
   const {
@@ -16,30 +16,26 @@ function Wordle() {
   } = useWordle();
 
   return (
-    <WordleContext.Provider
-      value={{
-        attempt,
-        currentGuess,
-        previousGuesses,
-        gameState,
-        error,
-        isLoading,
-      }}
-    >
-      <div className="flex flex-col items-center justify-center">
-        <h1>MADE BY Siddharth FOR MPAC Technical Assessment</h1>
-        <ul>
-          <li>1. Reload the page to play again</li>
-          <li>
-            {"2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)"}
-          </li>
-        </ul>
-        {gameState === "won" && <p>{`Congratulations! You've won the game on turn: ${attempt}`}</p>}
-        {gameState === "lost" && <p>Game Over. Better luck next time!</p>}
-        {isLoading && <div>Loading...</div>}
-        <Board />
-      </div>
-    </WordleContext.Provider>
+    <div className="flex flex-col items-center justify-center">
+      <h1>MADE BY Siddharth FOR MPAC Technical Assessment</h1>
+      <ul>
+        <li>1. Reload the page to play again</li>
+        <li>{"2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)"}</li>
+      </ul>
+      {gameState === GAME_STATE.WON && (
+        <p>{`Congratulations! You've won the game on turn: ${attempt}`}</p>
+      )}
+      {gameState === GAME_STATE.LOST && (
+        <p>Game Over. Better luck next time!</p>
+      )}
+      {isLoading && <div>Loading...</div>}
+      {error && <Error errorVal={error.message}></Error>}
+      <Board
+        attempt={attempt}
+        currentGuess={currentGuess}
+        previousGuesses={previousGuesses}
+      />
+    </div>
   );
 }
 
