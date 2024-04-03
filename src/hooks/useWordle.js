@@ -132,17 +132,15 @@ function useWordle() {
         payload: key.toUpperCase(),
       });
       return;
-    }
-
-    if (key === "Backspace") {
+    } else if (key === "Backspace") {
       wordleDispatch({ type: "DEL_CHARACTER_FROM_CURRENT_GUESS" });
       return;
-    }
-
-    if (key === "Enter" && wordleState.currentGuess.length !== WORD_LENGTH) {
-      handleError(`Word must be ${WORD_LENGTH} letters long.`);
-    } else {
-      submitGuess();
+    } else if (key === "Enter") {
+      if (wordleState.currentGuess.length !== WORD_LENGTH) {
+        handleError(`Word must be ${WORD_LENGTH} letters long.`);
+      } else {
+        submitGuess();
+      }
     }
   };
 
