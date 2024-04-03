@@ -9,7 +9,9 @@
   - TailwindCSS is used for styling (utility-first CSS framework for rapid UI development)
 
 ## To Run Locally
+
 While in the project root folder:
+
 - npm install
 - npm run dev
 
@@ -21,7 +23,7 @@ While in the project root folder:
 
 Add More Features: (After Exams)
 
-- Put some effort into UI 
+- Put some effort into UI
 
 - Hard Mode:
 
@@ -54,8 +56,11 @@ Add More Features: (After Exams)
 
     - As new features (e.g., Hard Mode, on-screen keyboard) are added, the complexity of state management is expected to increase. useReducer() offers a scalable solution that can accommodate this complexity more gracefully than multiple useState() hooks
 
+- CONS
+  - A good amount of boilerplate code!
+
 ## why useMemo() and useCallback() are not that helpful for a project of this scope and nature
 
 - Simple Computed Values
 - Shallow Component Tree
-- Premature Optimization
+- Not falling for Premature Optimization
