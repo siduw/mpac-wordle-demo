@@ -34,55 +34,35 @@ function wordleReducer(state, action) {
       let nextAttempt = state.attempt + 1;
       let solutionArray = [...state.previousGuesses];
 
-      if (is_valid_word) {
-        solutionArray[state.attempt] = {
-          word: state.currentGuess,
-          score: action.payload.score,
-        };
-
-        // CHECK IF THE GAME IS WON
-        if (score.every((ele) => ele === 2)) {
-          return {
-            ...state,
-            previousGuesses: solutionArray,
-            currentGuess: "",
-            attempt: nextAttempt,
-            gameState: "won",
-            isLoading: false,
-            error: null,
-          };
-        }
-
-        // CHECK IF THE GAME IS LOST BY EXHAUSTING MAX ATTEMPTS
-        if (nextAttempt >= MAX_ATTEMPTS) {
-          return {
-            ...state,
-            previousGuesses: solutionArray,
-            currentGuess: "",
-            attempt: nextAttempt,
-            gameState: "lost",
-            isLoading: false,
-            error: null,
-          };
-        }
-
-        // Game is still ongoing
-        return {
-          ...state,
-          previousGuesses: solutionArray,
-          currentGuess: "",
-          attempt: nextAttempt,
-          isLoading: false,
-          error: null,
-        };
-      } else {
-        // HANDLE INVALID WORD WITHOUT CHANING attempt OR gamesState
+      if (!is_valid_word) {
         return {
           ...state,
           isLoading: false,
           error: { message: "This is not a valid word." },
         };
       }
+
+      solutionArray[state.attempt] = {
+        word: state.currentGuess,
+        score: action.payload.score,
+      };
+
+      let gameState = "on-going"; // Default state
+      if (score.every((ele) => ele === 2)) {
+        gameState = "won"; // Win condition met
+      } else if (nextAttempt >= MAX_ATTEMPTS) {
+        gameState = "lost"; // Lose condition met by exhausting attempts
+      }
+
+      return {
+        ...state,
+        previousGuesses: solutionArray,
+        currentGuess: "",
+        attempt: nextAttempt,
+        gameState: gameState,
+        isLoading: false,
+        error: null,
+      };
     case "HANDLE_ERROR":
       return {
         ...state,
@@ -137,39 +117,45 @@ function useWordle() {
       const resData = await validateGuess(wordleState.currentGuess);
       wordleDispatch({ type: "SUBMIT_GUESS_SUCCESS", payload: { ...resData } });
     } catch (error) {
-      handleError(error.message);
+      handleError(error.message || "An unknown error occurred");
     }
   };
 
   const handleKeyDown = ({ key }) => {
-    // NO CHANGED REGISTERED WHEN LOADING OR WHEN THE GAME IS OVER
-    if (wordleState.isLoading || wordleState.gameState !== 'on-going') return;
-    if (/^[a-zA-Z]$/.test(key)) {
+    if (wordleState.isLoading || wordleState.gameState !== "on-going") return;
+
+    const isLetter = /^[a-zA-Z]$/.test(key);
+
+    if (isLetter) {
       wordleDispatch({
         type: "ADD_CHARACTER_TO_CURRENT_GUESS",
-        payload: key,
+        payload: key.toUpperCase(),
       });
-    } else if (key === "Backspace") {
+      return;
+    }
+
+    if (key === "Backspace") {
       wordleDispatch({ type: "DEL_CHARACTER_FROM_CURRENT_GUESS" });
-    } else if (key === "Enter") {
-      if (wordleState.attempt > MAX_ATTEMPTS) {
-        handleError("Max attempts reached.");
-      } else if (wordleState.currentGuess.length < WORD_LENGTH) {
-        handleError("Word must be " + WORD_LENGTH + " letters long.");
-      } else {
-        submitGuess();
-      }
+      return;
+    }
+
+    if (key === "Enter" && wordleState.currentGuess.length !== WORD_LENGTH) {
+      handleError(`Word must be ${WORD_LENGTH} letters long.`);
+    } else {
+      submitGuess();
     }
   };
 
+  // ADDING LISTENER
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleKeyDown, wordleState.gameState]);
+  }, [handleKeyDown]);
 
+  // FOR MONITORING ERRORS
   useEffect(() => {
     if (wordleState.error && wordleState.error.message) {
       alert(wordleState.error.message);

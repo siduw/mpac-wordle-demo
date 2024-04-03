@@ -1,41 +1,20 @@
 import { WORD_LENGTH } from "../utilities/constants";
 import LetterBox from "./LetterBox";
 
-function Row({ guess, currentGuess }) {
+function Row({ guess, currentGuess = "" }) {
+  // MERGE LOGIC FOR RENDERING GUESSES AND THE CURRENT GUESS
+  const letters = guess ? guess.word.split("") : currentGuess.split("");
+  const scores = guess ? guess.score : [];
 
-  let rowClassNames = "flex flex-row m-2 "
-
-  if (guess) {
-    return (
-      <div className={rowClassNames}>
-        {guess.word.split("").map((letter, index) => {
-          return (
-            <LetterBox key={index} letter={letter} score={guess.score[index]} />
-          );
-        })}
-      </div>
-    );
-  } else if (currentGuess) {
-    const letters = currentGuess.split("");
-
-    return (
-      <div className={rowClassNames}>
-        {letters.map((letter, index) => {
-          return <LetterBox key={index} letter={letter} />;
-        })}
-        {[...Array(WORD_LENGTH - letters.length)].map((val, index) => {
-          return <LetterBox letter="" key={index} />;
-        })}
-      </div>
-    );
-  }
   return (
-    <div className={rowClassNames}>
-      <LetterBox letter="" />
-      <LetterBox letter="" />
-      <LetterBox letter="" />
-      <LetterBox letter="" />
-      <LetterBox letter="" />
+    <div className="flex flex-row m-2">
+      {Array.from({ length: WORD_LENGTH }, (ele, index) => (
+        <LetterBox
+          key={index}
+          letter={letters[index] || ""}
+          score={scores[index]}
+        />
+      ))}
     </div>
   );
 }

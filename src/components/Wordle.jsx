@@ -34,8 +34,8 @@ function Wordle() {
             {"2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)"}
           </li>
         </ul>
-        {gameState === "won" && <p>Congratulations! You've won the game!</p>}
-        {gameState === "lost" && <p>Game Over. Try again!</p>}
+        {gameState === "won" && <p>{`Congratulations! You've won the game on turn: ${attempt}`}</p>}
+        {gameState === "lost" && <p>Game Over. Better luck next time!</p>}
         {isLoading && <div>Loading...</div>}
         <Board />
       </div>
