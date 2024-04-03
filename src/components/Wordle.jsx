@@ -27,13 +27,14 @@ function Wordle() {
       }}
     >
       <div className="flex flex-col items-center justify-center">
-        <h1>MADE BY SIDDHARTH FOR MPAC TECHNICAL ASSESSMENT</h1>
+        <h1>MADE BY Siddharth FOR MPAC Technical Assessment</h1>
         <ul>
           <li>1. Reload the page to play again</li>
           <li>
             {"2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)"}
           </li>
         </ul>
+        <p>{"Current Guess: " + currentGuess}</p>
         {isFinished && (
           <div>
             <p>This game is over</p>
