@@ -16,6 +16,8 @@
 
 Add More Features: (After Exams)
 
+- Put some effort into UI 
+
 - Hard Mode:
 
   - Original NYT WORDLE Feature: Implement a "Hard Mode" where players must use clues from previous guesses. This mode requires integrating logic to enforce the use of yellow and green letters in subsequent guesses.
@@ -29,6 +31,11 @@ Add More Features: (After Exams)
   - Enhance accessibility for mobile users by adding an on-screen keyboard.
 
 # Major Design Decisions
+
+## Why "div" tags over something like "input"
+
+- More flexibility
+- Custom interactions
 
 ## useReducer() vs useState()
 
