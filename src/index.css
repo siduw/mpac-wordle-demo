@@ -12,11 +12,11 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   align-items: center;
-  background-color: grey;
+  background-color: #005A9E;
 }
 
 h1 {
-  color: black;
+  color: white;
   font-size: x-large;
   text-decoration: underline;
 }

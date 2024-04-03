@@ -19,8 +19,12 @@ function Wordle() {
     <div className="flex flex-col items-center justify-center">
       <h1>MADE BY Siddharth FOR MPAC Technical Assessment</h1>
       <ul>
-        <li>1. Reload the page to play again</li>
-        <li>{"2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)"}</li>
+        <li>
+          <p>1. Reload the page to play again</p>
+        </li>
+        <li>
+          <p>{"2. Use keyboard to enter values (Enter, Backspace, a-zA-Z)"}</p>
+        </li>
       </ul>
       {gameState === GAME_STATE.WON && (
         <p>{`Congratulations! You've won the game on turn: ${attempt}`}</p>
