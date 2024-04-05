@@ -64,3 +64,7 @@ Add More Features: (After Exams)
 - Simple Computed Values
 - Shallow Component Tree
 - Not falling for Premature Optimization
+
+## why not use useContext()?
+
+- Not necessarily required as the component tree is not deep enough!
