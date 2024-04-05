@@ -2,7 +2,7 @@ import React from "react";
 import { WORD_LENGTH } from "../utilities/constants";
 import Letter from "./Letter";
 
-const Row = React.memo(({ guess, currentGuess = "" }) => {
+const Row = ({ guess, currentGuess = "" }) => {
   // MERGE LOGIC FOR RENDERING GUESSES AND THE CURRENT GUESS
   const letters = guess ? guess.word.split("") : currentGuess.split("");
   const scores = guess ? guess.score : [];
@@ -18,6 +18,6 @@ const Row = React.memo(({ guess, currentGuess = "" }) => {
       ))}
     </div>
   );
-});
+};
 
 export default Row;
